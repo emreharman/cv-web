@@ -1,36 +1,67 @@
-import React, { useState } from "react";
-
-import Header from "../../components/Header";
-import { updateUser } from "../../redux/actions/userActions";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+import { getUser, updateUser } from "../../redux/actions/userActions";
+import Header from "../../components/Header";
+import actionTypes from "../../redux/actions/actionTypes";
+import axios from "axios";
 
-const AddEducation = () => {
-  const { userState } = useSelector((state) => state);
-  const dispatch = useDispatch();
+const EditEducation = () => {
   const navigate = useNavigate();
+  const params = useParams();
+  const dispatch = useDispatch();
+  const { userState } = useSelector((state) => state);
+
   const [educationForm, setEducationForm] = useState({
     schoolName: "",
     degree: "",
     average: "",
     city: "",
     country: "",
-    startDate: new Date(),
-    present: false,
-    finishDate: new Date(),
+    startDate: "",
+    present: "",
+    finishDate: "",
   });
-  const handleAddEducation = (e) => {
+
+  useEffect(() => {
+    const educationEdit = userState.user.educations.find(
+      (item) => item.id === params.educationId
+    );
+    // console.log("educationEdit", educationEdit);
+
+    setEducationForm({
+      schoolName: educationEdit.schoolName,
+      degree: educationEdit.degree,
+      average: educationEdit.average,
+      city: educationEdit.city,
+      country: educationEdit.country,
+      startDate: educationEdit.startDate,
+      present: educationEdit.present,
+      finishDate: educationEdit.finishDate,
+    });
+  }, []);
+
+  const handleEditEducation = (e) => {
     e.preventDefault();
-    const newEducation = {
-      id: String(new Date().getTime()),
+
+    const editEducation = {
+      //   id: String(new Date().getTime()),
+      id: params.educationId,
       ...educationForm,
     };
+    console.log("editEducation", editEducation);
+
+    const educationFilter = userState.user.educations.filter(
+      (item) => item.id !== editEducation.id
+    );
+    console.log("educationFilter", educationFilter);
+
     dispatch(
       updateUser(
         "",
         {
           ...userState.user,
-          educations: [...userState.user.educations, newEducation],
+          educations: [...educationFilter, editEducation],
         },
         () => navigate("/education-infos")
       )
@@ -40,7 +71,7 @@ const AddEducation = () => {
     <div>
       <Header />
       <div className="d-flex justify-content-center my-5">
-        <form className="w-50" onSubmit={handleAddEducation}>
+        <form className="w-50" onSubmit={handleEditEducation}>
           <div class="mb-3">
             <label for="schoolName" class="form-label">
               Okul Adı
@@ -189,4 +220,5 @@ const AddEducation = () => {
     </div>
   );
 };
-export default AddEducation;
+
+export default EditEducation;

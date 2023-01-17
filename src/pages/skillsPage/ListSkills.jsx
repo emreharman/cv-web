@@ -7,7 +7,7 @@ import { updateUser, getUser } from "../../redux/actions/userActions";
 
 import Header from "../../components/Header";
 
-const ListEducations = () => {
+const ListSkills = () => {
   const dispatch = useDispatch();
   const { userState } = useSelector((state) => state);
   const navigate = useNavigate();
@@ -21,12 +21,10 @@ const ListEducations = () => {
   }, []);
 
   const handleDelete = (id) => {
-    const filteredEducations = userState.user.educations.filter(
+    const filteredSkills = userState.user.skills.filter(
       (item) => item.id !== id
     );
-    dispatch(
-      updateUser("", { ...userState.user, educations: filteredEducations })
-    );
+    dispatch(updateUser("", { ...userState.user, skills: filteredSkills }));
   };
   if (!userState.success) return null;
   return (
@@ -39,25 +37,21 @@ const ListEducations = () => {
         >
           Geri
         </button>
-        {userState.user.educations.length === 0 ? (
-          <p>Kayıtlı bir eğitim bilginiz yok</p>
+        {userState.user.skills.length === 0 ? (
+          <p>Kayıtlı bir yeteneğiniz yok</p>
         ) : (
           <div>
-            {userState.user.educations.map((education) => (
-              <div key={education.id}>
-                <p>Okul Adı: {education.schoolName}</p>
-                <p>Bölüm: {education.degree}</p>
-                <p>
-                  Yer: {education.city}/{education.country}
-                </p>
+            {userState.user.skills.map((item) => (
+              <div key={item.id}>
+                <p>Başlık: {item.skill}</p>
                 <button
-                  onClick={() => handleDelete(education.id)}
+                  onClick={() => handleDelete(item.id)}
                   className="btn btn-danger me-5"
                 >
                   Sil
                 </button>
                 <button
-                  onClick={() => navigate(`/edit-education/${education.id}`)}
+                  onClick={() => navigate(`/edit-skill/${item.id}`)}
                   className="btn btn-primary"
                 >
                   Düzenle
@@ -71,14 +65,14 @@ const ListEducations = () => {
 
       <div className="d-flex justify-content-center">
         <button
-          onClick={() => navigate("/add-education")}
+          onClick={() => navigate("/add-skill")}
           className="btn btn-primary"
         >
-          Eğitim Bilgisi Ekle
+          Yetenek Ekle
         </button>
       </div>
     </div>
   );
 };
 
-export default ListEducations;
+export default ListSkills;

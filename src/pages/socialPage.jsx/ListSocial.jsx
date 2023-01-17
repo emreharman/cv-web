@@ -7,7 +7,7 @@ import { updateUser, getUser } from "../../redux/actions/userActions";
 
 import Header from "../../components/Header";
 
-const ListEducations = () => {
+const ListSocial = () => {
   const dispatch = useDispatch();
   const { userState } = useSelector((state) => state);
   const navigate = useNavigate();
@@ -21,12 +21,10 @@ const ListEducations = () => {
   }, []);
 
   const handleDelete = (id) => {
-    const filteredEducations = userState.user.educations.filter(
+    const filteredSocials = userState.user.socials.filter(
       (item) => item.id !== id
     );
-    dispatch(
-      updateUser("", { ...userState.user, educations: filteredEducations })
-    );
+    dispatch(updateUser("", { ...userState.user, socials: filteredSocials }));
   };
   if (!userState.success) return null;
   return (
@@ -39,25 +37,23 @@ const ListEducations = () => {
         >
           Geri
         </button>
-        {userState.user.educations.length === 0 ? (
-          <p>Kayıtlı bir eğitim bilginiz yok</p>
+        {userState.user.socials.length === 0 ? (
+          <p>Kayıtlı bir sosyal hesabınız yok</p>
         ) : (
           <div>
-            {userState.user.educations.map((education) => (
-              <div key={education.id}>
-                <p>Okul Adı: {education.schoolName}</p>
-                <p>Bölüm: {education.degree}</p>
-                <p>
-                  Yer: {education.city}/{education.country}
-                </p>
+            {userState.user.socials.map((social) => (
+              <div key={social.id}>
+                <p>Başlık: {social.title}</p>
+                <p>Link: {social.link}</p>
+                <p>İcon: {social.icon}</p>
                 <button
-                  onClick={() => handleDelete(education.id)}
+                  onClick={() => handleDelete(social.id)}
                   className="btn btn-danger me-5"
                 >
                   Sil
                 </button>
                 <button
-                  onClick={() => navigate(`/edit-education/${education.id}`)}
+                  onClick={() => navigate(`/edit-social/${social.id}`)}
                   className="btn btn-primary"
                 >
                   Düzenle
@@ -71,14 +67,14 @@ const ListEducations = () => {
 
       <div className="d-flex justify-content-center">
         <button
-          onClick={() => navigate("/add-education")}
+          onClick={() => navigate("/add-social")}
           className="btn btn-primary"
         >
-          Eğitim Bilgisi Ekle
+          Sosyal Hesap Ekle
         </button>
       </div>
     </div>
   );
 };
 
-export default ListEducations;
+export default ListSocial;

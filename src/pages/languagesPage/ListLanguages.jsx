@@ -7,7 +7,7 @@ import { updateUser, getUser } from "../../redux/actions/userActions";
 
 import Header from "../../components/Header";
 
-const ListEducations = () => {
+const ListExperiences = () => {
   const dispatch = useDispatch();
   const { userState } = useSelector((state) => state);
   const navigate = useNavigate();
@@ -21,11 +21,11 @@ const ListEducations = () => {
   }, []);
 
   const handleDelete = (id) => {
-    const filteredEducations = userState.user.educations.filter(
+    const filteredLanguages = userState.user.languages.filter(
       (item) => item.id !== id
     );
     dispatch(
-      updateUser("", { ...userState.user, educations: filteredEducations })
+      updateUser("", { ...userState.user, languages: filteredLanguages })
     );
   };
   if (!userState.success) return null;
@@ -39,25 +39,22 @@ const ListEducations = () => {
         >
           Geri
         </button>
-        {userState.user.educations.length === 0 ? (
-          <p>Kayıtlı bir eğitim bilginiz yok</p>
+        {userState.user.languages.length === 0 ? (
+          <p>Kayıtlı bir dil bilginiz yok</p>
         ) : (
           <div>
-            {userState.user.educations.map((education) => (
-              <div key={education.id}>
-                <p>Okul Adı: {education.schoolName}</p>
-                <p>Bölüm: {education.degree}</p>
-                <p>
-                  Yer: {education.city}/{education.country}
-                </p>
+            {userState.user.languages.map((item) => (
+              <div key={item.id}>
+                <p>Dil: {item.language}</p>
+                <p>Seviye: {item.level}</p>
                 <button
-                  onClick={() => handleDelete(education.id)}
+                  onClick={() => handleDelete(item.id)}
                   className="btn btn-danger me-5"
                 >
                   Sil
                 </button>
                 <button
-                  onClick={() => navigate(`/edit-education/${education.id}`)}
+                  onClick={() => navigate(`/edit-language/${item.id}`)}
                   className="btn btn-primary"
                 >
                   Düzenle
@@ -71,14 +68,14 @@ const ListEducations = () => {
 
       <div className="d-flex justify-content-center">
         <button
-          onClick={() => navigate("/add-education")}
+          onClick={() => navigate("/add-language")}
           className="btn btn-primary"
         >
-          Eğitim Bilgisi Ekle
+          Dil Bilgisi Ekle
         </button>
       </div>
     </div>
   );
 };
 
-export default ListEducations;
+export default ListExperiences;
